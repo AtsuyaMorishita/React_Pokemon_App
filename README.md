@@ -1,1 +1,1 @@
-# React ポケモンアプリケーション
+# React ポケモンアプリケーション# react-pokemon-app
