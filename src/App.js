@@ -10,7 +10,7 @@ function App() {
 
   //ローディングの状態
   const [loading, setLoading] = useState(true);
-  //各ポケモンデータ
+  //各ポケモンの詳細データ
   const [pokemonData, setPokemonData] = useState([]);
   //次へボタンのURL
   const [nextUrl, setNextUrl] = useState("");
@@ -22,8 +22,8 @@ function App() {
       //全てのポケモンデータを取得
       let res = await getAllPokemon(initialURL);
 
-      //各ポケモンの詳細なデータを取得
-      loadPokemon(res.results);
+      //各ポケモンの詳細なデータを取得し、stateのpokemonDataへ格納する
+      await loadPokemon(res.results);
 
       //prev・nextボタンのurlをセット
       setNextUrl(res.next);
@@ -43,6 +43,7 @@ function App() {
     //「Promise.all」 全てのデータをfetchし終えるまで。配列を格納する。
     let _pokemonData = await Promise.all(
       data.map((pokemon) => {
+        //各ポケモンの詳細urlを取得する
         let pokemonRecord = getPokemon(pokemon.url);
         return pokemonRecord;
       })
@@ -57,8 +58,10 @@ function App() {
     //ローディング開始
     setLoading(true);
 
-    //各データを取得し、Cardコンポーネント用に用意
+    //全てのポケモンデータを取得
     let data = await getAllPokemon(nextUrl);
+
+    //各ポケモンの詳細なデータを取得し、stateのpokemonDataへ格納する
     await loadPokemon(data.results);
 
     //prev・nextボタンのurlをセット
@@ -100,6 +103,7 @@ function App() {
         ) : (
           <>
             <div className="pokemonCardContainer">
+              {/* 1つ1つのポケモン詳細データをCardコンポーネントへ渡す */}
               {pokemonData.map((pokemon, i) => {
                 return <Card key={i} pokemon={pokemon} />;
               })}
